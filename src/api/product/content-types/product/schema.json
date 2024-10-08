@@ -38,8 +38,11 @@
       "default": 0,
       "min": 0
     },
-    "fishbowl_part_id": {
-      "type": "integer"
+    "fishbowl": {
+      "displayName": "Fishbowl",
+      "type": "component",
+      "repeatable": false,
+      "component": "fishbowl.fishbowl"
     }
   }
 }

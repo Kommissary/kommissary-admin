@@ -56,8 +56,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
       ]
     >;
     items: Schema.Attribute.JSON;
-    created_on: Schema.Attribute.DateTime;
-    uid: Schema.Attribute.Integer;
+    messages: Schema.Attribute.JSON;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -97,7 +96,7 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<0>;
-    fishbowl_part_id: Schema.Attribute.Integer;
+    fishbowl: Schema.Attribute.Component<'fishbowl.fishbowl', false>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;

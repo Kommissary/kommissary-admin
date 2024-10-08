@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_fishbowl_fishbowls",
+  "info": {
+    "displayName": "Fishbowl",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "productId": {
+      "type": "integer"
+    },
+    "partId": {
+      "type": "integer"
+    },
+    "num": {
+      "type": "string"
+    },
+    "sizeUomId": {
+      "type": "integer"
+    },
+    "uomId": {
+      "type": "integer"
+    },
+    "weightUomId": {
+      "type": "integer"
+    },
+    "categories": {
+      "type": "string"
+    }
+  }
+}

@@ -27,11 +27,8 @@
     "items": {
       "type": "json"
     },
-    "created_on": {
-      "type": "datetime"
-    },
-    "uid": {
-      "type": "integer"
+    "messages": {
+      "type": "json"
     }
   }
 }
