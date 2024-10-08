@@ -27,12 +27,6 @@
         "files"
       ]
     },
-    "categories": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::category.category",
-      "inversedBy": "products"
-    },
     "price": {
       "type": "decimal",
       "default": 0,
@@ -43,6 +37,12 @@
       "type": "component",
       "repeatable": false,
       "component": "fishbowl.fishbowl"
+    },
+    "categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::category.category",
+      "inversedBy": "products"
     }
   }
 }
