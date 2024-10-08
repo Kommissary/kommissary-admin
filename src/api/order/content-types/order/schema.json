@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "Estimate",
+        "Issued",
+        "In Progress",
+        "Fulfilled",
+        "Closed Short",
+        "Void",
+        "Expired"
+      ]
+    },
+    "items": {
+      "type": "json"
+    },
+    "created_on": {
+      "type": "datetime"
+    },
+    "uid": {
+      "type": "integer"
+    }
+  }
+}
