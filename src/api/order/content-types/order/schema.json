@@ -29,6 +29,9 @@
     },
     "messages": {
       "type": "json"
+    },
+    "userId": {
+      "type": "string"
     }
   }
 }
