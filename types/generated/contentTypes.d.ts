@@ -57,6 +57,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     items: Schema.Attribute.JSON;
     messages: Schema.Attribute.JSON;
     userId: Schema.Attribute.String;
+    shipToAddress: Schema.Attribute.JSON;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;

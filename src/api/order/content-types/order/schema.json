@@ -32,6 +32,9 @@
     },
     "userId": {
       "type": "string"
+    },
+    "shipToAddress": {
+      "type": "json"
     }
   }
 }
