@@ -40,7 +40,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     state: Schema.Attribute.Enumeration<
@@ -56,8 +56,15 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     >;
     items: Schema.Attribute.JSON;
     messages: Schema.Attribute.JSON;
-    userId: Schema.Attribute.String;
     shipToAddress: Schema.Attribute.JSON;
+    slug: Schema.Attribute.UID;
+    userId: Schema.Attribute.Integer;
+    updates: Schema.Attribute.JSON;
+    update: Schema.Attribute.JSON;
+    metaData: Schema.Attribute.JSON;
+    billToAddress: Schema.Attribute.JSON;
+    organization: Schema.Attribute.String;
+    name: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -98,6 +105,8 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::category.category'
     >;
+    countWeight: Schema.Attribute.String;
+    metaData: Schema.Attribute.JSON;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -582,8 +591,11 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    shipping_addresses: Schema.Attribute.JSON;
-    billing_addresses: Schema.Attribute.JSON;
+    shippingAddresses: Schema.Attribute.JSON;
+    billingAddresses: Schema.Attribute.JSON;
+    fullName: Schema.Attribute.String & Schema.Attribute.Required;
+    metaData: Schema.Attribute.JSON;
+    organization: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;

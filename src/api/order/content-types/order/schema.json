@@ -8,7 +8,7 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -30,11 +30,32 @@
     "messages": {
       "type": "json"
     },
-    "userId": {
-      "type": "string"
-    },
     "shipToAddress": {
       "type": "json"
+    },
+    "slug": {
+      "type": "uid"
+    },
+    "userId": {
+      "type": "integer"
+    },
+    "updates": {
+      "type": "json"
+    },
+    "update": {
+      "type": "json"
+    },
+    "metaData": {
+      "type": "json"
+    },
+    "billToAddress": {
+      "type": "json"
+    },
+    "organization": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
     }
   }
 }
