@@ -56,6 +56,9 @@
     },
     "name": {
       "type": "string"
+    },
+    "PONumber": {
+      "type": "string"
     }
   }
 }

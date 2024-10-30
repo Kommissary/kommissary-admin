@@ -65,6 +65,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     billToAddress: Schema.Attribute.JSON;
     organization: Schema.Attribute.String;
     name: Schema.Attribute.String;
+    PONumber: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
