@@ -66,6 +66,8 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     organization: Schema.Attribute.String;
     name: Schema.Attribute.String;
     PONumber: Schema.Attribute.String;
+    site: Schema.Attribute.Enumeration<['doe']> &
+      Schema.Attribute.DefaultTo<'doe'>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -108,6 +110,8 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     >;
     countWeight: Schema.Attribute.String;
     metaData: Schema.Attribute.JSON;
+    site: Schema.Attribute.Enumeration<['doe']> &
+      Schema.Attribute.DefaultTo<'doe'>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;

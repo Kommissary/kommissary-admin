@@ -59,6 +59,13 @@
     },
     "PONumber": {
       "type": "string"
+    },
+    "site": {
+      "type": "enumeration",
+      "enum": [
+        "doe"
+      ],
+      "default": "doe"
     }
   }
 }

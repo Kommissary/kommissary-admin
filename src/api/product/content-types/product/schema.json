@@ -49,6 +49,13 @@
     },
     "metaData": {
       "type": "json"
+    },
+    "site": {
+      "type": "enumeration",
+      "enum": [
+        "doe"
+      ],
+      "default": "doe"
     }
   }
 }
