@@ -8,15 +8,21 @@ module.exports = (plugin) => {
             async afterCreate(event) {
                 email(Template.CREATE_USER as Template, { to: event.result.email }, { event, user: event.result });
             },
-            async afterUpdate(event) {
+            async beforeUpdate(event) {
                 if (event.params.data?.resetPasswordToken) {
                     return;
                 }
+                // If metaData.noEmail is set to true, then do not send an email
+                let sendEmail = true;
                 if (event.params.data?.metaData) {
                     const metaData = JSON.parse(event.params.data.metaData);
-                    if (metaData?.noEmail) return;
+                    if (metaData?.noEmail) {
+                        sendEmail = false;
+                        delete metaData.noEmail;
+                        event.params.data.metaData = JSON.stringify(metaData);
+                    }
                 }
-                email(Template.UPDATE_USER as Template, { to: event.result.email }, { event, user: event.result }, false);
+                if (sendEmail) email(Template.UPDATE_USER as Template, { to: event.result.email }, { event, user: event.result }, false);
             },
         });
         const updateMe = async (ctx) => {

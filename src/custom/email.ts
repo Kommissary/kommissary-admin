@@ -23,16 +23,24 @@ export type Updates = Update[];
 
 export type Event = {
     params: {
+        where?: { id: string | number; };
         data: {
+            slug: string;
             userId: string;
             state: string;
             messages: [] | null;
             update: Update | null;
             updates: Updates | null;
+            PONumber: string;
+            site: string;
+            items: { name: string; quantity: number; }[];
+            metaData: { noEmail?: boolean } | undefined;
         };
     };
-    result: {
-        slug: string;
+    result?: {
+        slug?: string;
+        items?: { name: string, quantity: number }[];
+        site?: string;
     };
 }
 
@@ -50,6 +58,7 @@ export const Template = {
     UPDATE_USER: 'UPDATE_USER',
     CREATE_ORDER: 'CREATE_ORDER',
     UPDATE_ORDER: 'UPDATE_ORDER',
+    UPDATE_ORDER_READY: 'UPDATE_ORDER_READY',
 }
 
 const fieldDisplay = (field: string) => {
@@ -95,12 +104,12 @@ export const EmailTemplate = {
             <img src="https://kommissary.com/images/logo.svg" alt="Kommissary Logo" style="width: 100px; height: auto;" />
             <p>Hi ${vars.user.fullName}, <br /> 
             we will be in-touch soon to confirm your order.</p>
-            <p>View / update your order here: ${domain}/order/${vars.event.result.slug}</p>
-            <ul>
-                
-            </ul>
-            <p>Order details: <br />
-            TBD</p>
+            <p>View / update your order here: ${domain}/${vars.event.result.site}/order/${vars.event.result.slug}</p>
+            <p><strong>Order details</strong>: <br />
+            ${vars.event.result.items?.map(item => ` • ${item.name} &times; ${item.quantity}`).join('<br />\n')}
+            </p>
+            <p>Thanks, <br>
+            The Kommissary Team</p>
         `,
     }),
     UPDATE_ORDER: (vars: Vars) => ({
@@ -108,10 +117,28 @@ export const EmailTemplate = {
         html: `
             <img src="https://kommissary.com/images/logo.svg" alt="Kommissary Logo" style="width: 100px; height: auto;" />
             <p>Hi ${vars.user.fullName}, <br />
-            Your order has been updated. <br />
-            View / edit your order <a href="${domain}/order/${vars.event.result.slug}">here</a>.</p>
-            <p>Order details: <br />
-            TBD</p>
+            Your order has been updated.</p>
+            <p>View / edit your order <a href="${domain}/${vars.event.result.site}/order/${vars.event.result.slug}">here</a>.</p>
+            <p><strong>Order details</strong>: <br />
+            ${vars.event.result.items?.map(item => ` • ${item.name} &times; ${item.quantity}`).join('<br />\n')}
+            </p>
+            <p>Thanks, <br>
+            The Kommissary Team</p>
+        `,
+    }),
+    UPDATE_ORDER_READY: (vars: Vars) => ({
+        subject: `(${vars.event.params.data.state}) Your order is being processed!`,
+        html: `
+            <img src="https://kommissary.com/images/logo.svg" alt="Kommissary Logo" style="width: 100px; height: auto;" />
+            <p>Hi ${vars.user.fullName}, <br />
+            Your order is ready to be sent, just one more thing...<br />
+            We need your PO Number to proceed. Once you have it, either go <a href="${domain}/${vars.event.params.data.site}/order/${vars.event.params.data.slug}">here</a> and enter it in or reply to this email with your PO Number, and we'll handle it.</p>
+            <p>Download your receipt <a href="${domain}/${vars.event.params.data.site}/order/${vars.event.params.data.slug}">here</a> by clicking on the Downloaad Sales Order button.</p>
+            <p><strong>Order details</strong>: <br />
+                ${vars.event.params.data.items?.map(item => ` • ${item.name} &times; ${item.quantity}`).join('<br />\n')}
+            </p>
+            <p>Thanks, <br>
+            The Kommissary Team</p>
         `,
     }),
 }
