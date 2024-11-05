@@ -1,0 +1,36 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_configurations",
+  "info": {
+    "singularName": "site-configuration",
+    "pluralName": "site-configurations",
+    "displayName": "Site Configuration",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "categories": {
+      "type": "json"
+    },
+    "orderMinimum": {
+      "type": "decimal",
+      "default": 450
+    },
+    "fromEmail": {
+      "type": "email"
+    },
+    "replyEmail": {
+      "type": "email"
+    },
+    "ccEmail": {
+      "type": "email"
+    },
+    "gatewayPasswords": {
+      "type": "text",
+      "default": "nyc"
+    }
+  }
+}
