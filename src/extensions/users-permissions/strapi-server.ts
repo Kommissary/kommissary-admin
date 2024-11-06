@@ -15,14 +15,18 @@ module.exports = (plugin) => {
                 // If metaData.noEmail is set to true, then do not send an email
                 let sendEmail = true;
                 if (event.params.data?.metaData) {
-                    const metaData = JSON.parse(event.params.data.metaData);
+                    const metaData = typeof event.params.data.metaData === 'string'
+                        ? JSON.parse(event.params.data.metaData)
+                        : event.params.data.metaData;
                     if (metaData?.noEmail) {
                         sendEmail = false;
                         delete metaData.noEmail;
                         event.params.data.metaData = JSON.stringify(metaData);
                     }
                 }
-                if (sendEmail) email(Template.UPDATE_USER as Template, { to: event.result.email }, { event, user: event.result }, false);
+                if (sendEmail) email(Template.UPDATE_USER as Template, {
+                    to: event.params.data.email
+                }, { event, user: event.params.data }, false);
             },
         });
         const updateMe = async (ctx) => {
