@@ -143,6 +143,13 @@ export const EmailTemplate = {
     }),
 }
 
+export function cleanEmail(email: string): string {
+    email = email || '';
+    if (email.includes('<') && email.includes('>'))
+        email = email.split('<')[1].split('>')[0];
+    return email.trim().toLowerCase();
+}
+
 export function stripTags(html: string): string {
     return html.replace(/<\/?[^>]+(>|$)/g, '');
 }
@@ -162,7 +169,11 @@ export async function email(template: Template, email: Email, vars: Vars, ccAdmi
         ...email,
     } as Email;
     if (!email.to || !email.subject) return;
+    if (email?.bcc && cleanEmail(email.bcc) == cleanEmail(email.to)) delete email.bcc;
+    if (email?.cc && cleanEmail(email.cc) == cleanEmail(email.to)) delete email.cc;
+    if (email?.bcc && email?.cc && cleanEmail(email.bcc) == cleanEmail(email.cc)) delete email.cc;
     email.to = email.to.trim();
+    console.log(email)
     if (!email.html && !email.text) return;
     if (email.html) email.html = stripLineIndent(email.html);
     email.text = email.text || stripTags(email.html);
@@ -172,4 +183,4 @@ export async function email(template: Template, email: Email, vars: Vars, ccAdmi
 
 export function emailTemplate(template: string, vars: Vars) {
     return EmailTemplate[template](vars);
-}
+} 
