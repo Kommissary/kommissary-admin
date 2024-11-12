@@ -14,7 +14,7 @@ export default ({ env }) => ({
     "users-permissions": {
         config: {
             register: {
-                allowedFields: ["fullName", "shippingAddresses", "billingAddresses", "metaData"],
+                allowedFields: ["fullName", "shippingAddresses", "billingAddresses", "organization", "metaData"],
             },
         },
     },

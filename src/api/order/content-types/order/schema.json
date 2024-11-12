@@ -66,6 +66,9 @@
         "doe"
       ],
       "default": "doe"
+    },
+    "requestedDeliveryDate": {
+      "type": "string"
     }
   }
 }

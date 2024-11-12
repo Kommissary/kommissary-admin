@@ -557,6 +557,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     PONumber: Schema.Attribute.String;
     site: Schema.Attribute.Enumeration<['doe']> &
       Schema.Attribute.DefaultTo<'doe'>;
+    requestedDeliveryDate: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
