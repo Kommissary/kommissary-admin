@@ -4,7 +4,7 @@
   "info": {
     "singularName": "site-configuration",
     "pluralName": "site-configurations",
-    "displayName": "Site Configuration",
+    "displayName": "DoE Site Configuration",
     "description": ""
   },
   "options": {
@@ -31,6 +31,9 @@
     "gatewayPasswords": {
       "type": "text",
       "default": "nyc"
+    },
+    "customOrganizations": {
+      "type": "json"
     }
   }
 }

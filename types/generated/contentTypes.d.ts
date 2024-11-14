@@ -623,7 +623,7 @@ export interface ApiSiteConfigurationSiteConfiguration
   info: {
     singularName: 'site-configuration';
     pluralName: 'site-configurations';
-    displayName: 'Site Configuration';
+    displayName: 'DoE Site Configuration';
     description: '';
   };
   options: {
@@ -636,6 +636,7 @@ export interface ApiSiteConfigurationSiteConfiguration
     replyEmail: Schema.Attribute.Email;
     ccEmail: Schema.Attribute.Email;
     gatewayPasswords: Schema.Attribute.Text & Schema.Attribute.DefaultTo<'nyc'>;
+    customOrganizations: Schema.Attribute.JSON;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
