@@ -6,8 +6,9 @@ const domain = process.env.NODE_ENV == 'development'
 
 function generateBeforeDynamicFields(event) {
     const { data } = event.params;
-    event.params.data.slug = crypto.randomUUID()
-    event.params.data.name = `${data.state}: (user: ${data.userId}) - ${data.organization}`
+    event.params.data.slug = crypto.randomUUID();
+    event.params.data.name = `${data.state}: (user: ${data.userId}) - ${data.organization}`;
+    event.params.data.id = data.id;
 }
 
 export default {

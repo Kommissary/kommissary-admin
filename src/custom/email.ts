@@ -38,6 +38,7 @@ export type Event = {
         };
     };
     result?: {
+        id?: string | number;
         slug?: string;
         items?: { name: string, quantity: number }[];
         site?: string;
@@ -78,7 +79,7 @@ export const EmailTemplate = {
     CREATE_USER: (vars: Vars) => ({
         subject: `Welcome to the Kommissary DoE Shop!`,
         html: `
-            <img src="https://kommissary.com/images/logo.svg" alt="Kommissary Logo" style="width: 100px; height: auto;">
+            <img src="${domain}/images/Kommissary-DoE.svg" alt="" style="width: 100px; height: auto;">
             <p>Hi ${vars.user.fullName}, <br />
             welcome to the Kommissary DoE Shop!<br>
             Your account has been created, you can create and edit orders, download receipts, and view your order history.</p>
@@ -90,7 +91,7 @@ export const EmailTemplate = {
     UPDATE_USER: (vars: Vars) => ({
         subject: `You updated your Kommissary account`,
         html: `
-            <img src="https://kommissary.com/images/logo.svg" alt="Kommissary Logo" style="width: 100px; height: auto;">
+            <img src="${domain}/images/Kommissary-DoE.svg" alt="" style="width: 100px; height: auto;">
             <p>Hi ${vars.user.fullName}, <br />
             Looks like your ${Object.keys(vars.event.params.data).map(k=>k=='updatedAt'?null:fieldDisplay(k)).join(', ')} was changed.<br>
             <p>You can see your profile <a href="${domain}/user">here</a>.</p>
@@ -101,15 +102,20 @@ export const EmailTemplate = {
     CREATE_ORDER: (vars: Vars) => ({
         subject: `Thank you for your order request!`,
         html: `
-            <img src="https://kommissary.com/images/logo.svg" alt="Kommissary Logo" style="width: 100px; height: auto;" />
+            <img src="${domain}/images/Kommissary-DoE.svg" alt="Kommissary DoE" style="width: 100px; height: auto;" />
             <p>Hi ${vars.user.fullName}, <br /> 
             we will be in-touch soon to confirm your order.</p>
-            <p>View / update your order here: ${domain}/${vars.event.result.site}/order/${vars.event.result.slug}</p>
+            <p>View / update your order <a style="color: #f66;" href="${domain}/${vars.event.result.site}/order/${vars.event.result.slug}">here</a>.</p>
             <p><strong>Order details</strong>: <br />
             ${vars.event.result.items?.map(item => ` • ${item.name} &times; ${item.quantity}`).join('<br />\n')}
             </p>
-            <p>Thanks, <br>
+            <p style="margin-bottom: 16px;">Thanks, <br>
             The Kommissary Team</p>
+            <p>
+                <a style="text-decoration: none; color: #f66; border-radius: 8px; border: 1px solid #dddddd; background: white; padding: 16px 8px; display: inline-block;" href="${domain}/${vars.event.result.site}/order/${vars.event.params.data.slug}/kommissary-doe-order-${vars.event.result.id}-${vars.event.params.data.state.toLowerCase()}.xlsx">
+                    <img style="margin-right: 6px; display: inline-block;" src="${domain}/images/file.svg" alt="" height="16" width="16" /> Download Sales Order
+                </a>
+            </p>
         `,
     }),
     UPDATE_ORDER: (vars: Vars) => ({
@@ -173,7 +179,7 @@ export async function email(template: Template, email: Email, vars: Vars, ccAdmi
     if (email?.cc && cleanEmail(email.cc) == cleanEmail(email.to)) delete email.cc;
     if (email?.bcc && email?.cc && cleanEmail(email.bcc) == cleanEmail(email.cc)) delete email.cc;
     email.to = email.to.trim();
-    console.log(email)
+    // console.log(email)
     if (!email.html && !email.text) return;
     if (email.html) email.html = stripLineIndent(email.html);
     email.text = email.text || stripTags(email.html);
