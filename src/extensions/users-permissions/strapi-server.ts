@@ -8,6 +8,9 @@ module.exports = (plugin) => {
             async afterCreate(event) {
                 email(Template.CREATE_USER as Template, { to: event.result.email }, { event, user: event.result });
             },
+            /* async afterUpdate(event) {
+                email(Template.UPDATE_USER as Template, { to: event.result.email }, { event, user: event.result });
+            }, */
             async beforeUpdate(event) {
                 if (event.params.data?.resetPasswordToken) {
                     return;
@@ -24,9 +27,17 @@ module.exports = (plugin) => {
                         event.params.data.metaData = JSON.stringify(metaData);
                     }
                 }
-                if (sendEmail) email(Template.UPDATE_USER as Template, {
-                    to: event.params.data.email
-                }, { event, user: event.params.data }, false);
+                if (sendEmail) {
+                    if (!event.params.data?.email) {
+                        const customer = await strapi.db.query('plugin::users-permissions.user').findOne({
+                            where: event.params.where
+                        });
+                        event.params.data.email = customer.email;
+                    }
+                    email(Template.UPDATE_USER as Template, {
+                        to: event.params.data.email
+                    }, { event, user: event.params.data }, false);
+                }
             },
         });
         const updateMe = async (ctx) => {

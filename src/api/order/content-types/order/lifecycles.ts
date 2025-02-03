@@ -12,7 +12,7 @@ function generateBeforeDynamicFields(event) {
 }
 
 export default {
-    async beforeCreate(event: { params: { data: { slug: string; }; }; }) {
+    async beforeCreate(event: { params: { data: { slug: string, name: string, id: number }; }; }) {
         generateBeforeDynamicFields(event);
     },
     async afterCreate(event: Event) {
@@ -29,6 +29,7 @@ export default {
             where: event.params.where,
         });
         const newOrder = event.params.data;
+
         /**
             Estimate, Issued, In Progress
             Fulfilled, 
@@ -44,21 +45,37 @@ export default {
             }
         }
 
-        if ( // If the order is in progress and the PONumber is added, then set the order to Issued
+        /* if ( // If the order is in progress and the PONumber is added, then set the order to Issued
             prevOrder.state == 'In Progress' && newOrder.state != 'Issued' && 
             prevOrder.PONumber == '' && newOrder.PONumber != ''
         ) {
             event.params.data.state = 'Issued';
-        }
+        } */
 
-        if ( // If the order is in progress and the PONumber is empty, then send an email to the customer
-            (prevOrder.state == 'Estimate' && newOrder.state == 'In Progress') &&
-            (!newOrder.PONumber || (typeof newOrder.PONumber === 'string' && newOrder.PONumber == ''))
+        if ( // If the order is an estimate, then send an email to the customer
+            (prevOrder.state == 'Estimate' && newOrder.state == 'In Progress')
+            // && (!newOrder.PONumber || (typeof newOrder.PONumber === 'string' && newOrder.PONumber == ''))
         ) {
             const metaData = event.params.data.metaData || {};
             metaData.noEmail = true;
             event.params.data.metaData = metaData;
-            email(Template.UPDATE_ORDER_READY as Template, { to: customer.email }, { event, user: customer });
+            event.result = event.result || {};
+            event.result.id = event.result.id || prevOrder.id;
+            event.result.slug = event.result.slug || prevOrder.slug;
+            email(Template.UPDATE_ORDER_APPROVED as Template, { to: customer.email }, { event, user: customer });
+        }
+
+        if ( // If the order is in progress and the PONumber is empty, then send an email to the customer
+            (prevOrder.state == 'In Progress' && newOrder.state == 'Issued')
+            // && (!newOrder.PONumber || (typeof newOrder.PONumber === 'string' && newOrder.PONumber == ''))
+        ) {
+            const metaData = event.params.data.metaData || {};
+            metaData.noEmail = true;
+            event.params.data.metaData = metaData;
+            event.result = event.result || {};
+            event.result.id = event.result.id || prevOrder.id;
+            event.result.slug = event.result.slug || prevOrder.slug;
+            email(Template.UPDATE_ORDER_ISSUED as Template, { to: customer.email }, { event, user: customer });
         }
     },
     async afterUpdate(event: Event) {

@@ -59,10 +59,11 @@ export const Template = {
     UPDATE_USER: 'UPDATE_USER',
     CREATE_ORDER: 'CREATE_ORDER',
     UPDATE_ORDER: 'UPDATE_ORDER',
-    UPDATE_ORDER_READY: 'UPDATE_ORDER_READY',
+    UPDATE_ORDER_APPROVED: 'UPDATE_ORDER_APPROVED',
+    UPDATE_ORDER_ISSUED: 'UPDATE_ORDER_ISSUED',
 }
 
-const fieldDisplay = (field: string) => {
+/* const fieldDisplay = (field: string) => {
     switch (field) {
         case 'fullName':
             return '"Full Name"';
@@ -73,13 +74,28 @@ const fieldDisplay = (field: string) => {
         default:
             return `"${field.charAt(0).toUpperCase() + field.slice(1)}"`;
     }
+} */
+
+const replace = (str: string, tokens: {[key: string]: string | number}) => {
+    return str.replace(/\{\{[^\}]{1,}\}\}/g, (_, field) => {
+        const value = tokens[field];
+        if (value) return value as string;
+        return '';
+    });
 }
+const logoDoE = `<img src="${domain}/images/Kommissary-DoE.png" alt="Kommissary DoE" style="width: 200px; height: auto;" />`;
+/* const downloadSalesOrderBtn = `<a style="text-decoration: none; color: #666; border-radius: 8px; border: 1px solid #dddddd; background: white; padding: 8px 16px; display: inline-flex;" href="${domain}/{{site}}/order/{{slug}}/kommissary-doe-order-{{id}}-{{state}}.xlsx">
+    <img style="margin-right: 6px; display: inline-block;" src="${domain}/images/file.png" alt="" height="36" width="30" /> <span style="display: inline-block; line-height: 36px;">Download Sales Order</span>
+</a>` */
+const signatureDoE = `<p style="margin-bottom: 16px;">
+    Thanks, <br> The Kommissary Team
+</p>`
 
 export const EmailTemplate = {
     CREATE_USER: (vars: Vars) => ({
         subject: `Welcome to the Kommissary DoE Shop!`,
         html: `
-            <img src="${domain}/images/Kommissary-DoE.svg" alt="" style="width: 100px; height: auto;">
+            ${logoDoE}
             <p>Hi ${vars.user.fullName}, <br />
             welcome to the Kommissary DoE Shop!<br>
             Your account has been created, you can create and edit orders, download receipts, and view your order history.</p>
@@ -91,10 +107,10 @@ export const EmailTemplate = {
     UPDATE_USER: (vars: Vars) => ({
         subject: `You updated your Kommissary account`,
         html: `
-            <img src="${domain}/images/Kommissary-DoE.svg" alt="" style="width: 100px; height: auto;">
+            ${logoDoE}
             <p>Hi ${vars.user.fullName}, <br />
-            Looks like your ${Object.keys(vars.event.params.data).map(k=>k=='updatedAt'?null:fieldDisplay(k)).join(', ')} was changed.<br>
-            <p>You can see your profile <a href="${domain}/user">here</a>.</p>
+            Looks like your profile information was changed.<br>
+            <p>You can see your profile <a href="${domain}/doe/user">here</a>.</p>
             <p>Thanks, <br>
             The Kommissary Team</p>
         `,
@@ -102,15 +118,14 @@ export const EmailTemplate = {
     CREATE_ORDER: (vars: Vars) => ({
         subject: `Thank you for your order request!`,
         html: `
-            <img src="${domain}/images/Kommissary-DoE.png" alt="Kommissary DoE" style="width: 200px; height: auto;" />
+            ${logoDoE}
             <p>Hi ${vars.user.fullName}, <br /> 
-            we will be in-touch soon to confirm your order.</p>
+            We will be in-touch soon to confirm your order.</p>
             <p>View / update your order <a style="color: #f66;" href="${domain}/${vars.event.result.site}/order/${vars.event.result.slug}">here</a>.</p>
             <p><strong>Order details</strong>: <br />
             ${vars.event.result.items?.map(item => ` • ${item.name} &times; ${item.quantity}`).join('<br />\n')}
             </p>
-            <p style="margin-bottom: 16px;">Thanks, <br>
-            The Kommissary Team</p>
+            ${signatureDoE}
             <p>
                 <a style="text-decoration: none; color: #666; border-radius: 8px; border: 1px solid #dddddd; background: white; padding: 8px 16px; display: inline-flex;" href="${domain}/${vars.event.result.site}/order/${vars.event.params.data.slug}/kommissary-doe-order-${vars.event.result.id}-${vars.event.params.data.state.toLowerCase()}.xlsx">
                     <img style="margin-right: 6px; display: inline-block;" src="${domain}/images/file.png" alt="" height="36" width="30" /> <span style="display: inline-block; line-height: 36px;">Download Sales Order</span>
@@ -121,30 +136,58 @@ export const EmailTemplate = {
     UPDATE_ORDER: (vars: Vars) => ({
         subject: `(${vars.event.params.data.state}) Your order has been updated`,
         html: `
-            <img src="https://kommissary.com/images/logo.svg" alt="Kommissary Logo" style="width: 100px; height: auto;" />
+            ${logoDoE}
             <p>Hi ${vars.user.fullName}, <br />
             Your order has been updated.</p>
             <p>View / edit your order <a href="${domain}/${vars.event.result.site}/order/${vars.event.result.slug}">here</a>.</p>
             <p><strong>Order details</strong>: <br />
             ${vars.event.result.items?.map(item => ` • ${item.name} &times; ${item.quantity}`).join('<br />\n')}
             </p>
-            <p>Thanks, <br>
-            The Kommissary Team</p>
+            ${signatureDoE}
+            <p>
+                <a style="text-decoration: none; color: #666; border-radius: 8px; border: 1px solid #dddddd; background: white; padding: 8px 16px; display: inline-flex;" href="${domain}/${vars.event.result.site}/order/${vars.event.params.data.slug}/kommissary-doe-order-${vars.event.result.id}-${vars.event.params.data.state.toLowerCase().replace(' ', '-')}.xlsx">
+                    <img style="margin-right: 6px; display: inline-block;" src="${domain}/images/file.png" alt="" height="36" width="30" /> <span style="display: inline-block; line-height: 36px;">Download Sales Order</span>
+                </a>
+            </p>
         `,
     }),
-    UPDATE_ORDER_READY: (vars: Vars) => ({
+    UPDATE_ORDER_APPROVED: (vars: Vars) => ({
         subject: `(${vars.event.params.data.state}) Your order is being processed!`,
         html: `
-            <img src="https://kommissary.com/images/logo.svg" alt="Kommissary Logo" style="width: 100px; height: auto;" />
+            ${logoDoE}
             <p>Hi ${vars.user.fullName}, <br />
-            Your order is ready to be sent, just one more thing...<br />
-            We need your PO Number to proceed. Once you have it, either go <a href="${domain}/${vars.event.params.data.site}/order/${vars.event.params.data.slug}">here</a> and enter it in or reply to this email with your PO Number, and we'll handle it.</p>
-            <p>Download your receipt <a href="${domain}/${vars.event.params.data.site}/order/${vars.event.params.data.slug}">here</a> by clicking on the Downloaad Sales Order button.</p>
+            Your order has been approved!<br />
+            You can view/edit it <a href="${domain}/doe/order/${vars.event.result.slug}">here</a>.<br />
+            Important: If you need to make any changes, make them soon, once we <strong>issue</strong> the order, it won't be editable.</p>
             <p><strong>Order details</strong>: <br />
                 ${vars.event.params.data.items?.map(item => ` • ${item.name} &times; ${item.quantity}`).join('<br />\n')}
             </p>
-            <p>Thanks, <br>
-            The Kommissary Team</p>
+            ${signatureDoE}
+            <p>
+                <a style="text-decoration: none; color: #666; border-radius: 8px; border: 1px solid #dddddd; background: white; padding: 8px 16px; display: inline-flex;" href="${domain}/doe/order/${vars.event.result.slug}/kommissary-doe-order-${vars.event.result.id}-${vars.event.params.data.state.toLowerCase().replace(' ', '-')}.xlsx">
+                    <img style="margin-right: 6px; display: inline-block;" src="${domain}/images/file.png" alt="" height="36" width="30" /> <span style="display: inline-block; line-height: 36px;">Download Sales Order</span>
+                </a>
+            </p>
+        `,
+    }),
+    UPDATE_ORDER_ISSUED: (vars: Vars) => ({
+        subject: `(${vars.event.params.data.state}) Your order has been issued!`,
+        html: `
+            ${logoDoE}
+            <p>Hi ${vars.user.fullName}, <br />
+            Your order has been issued!<br />
+            You can view it <a href="${domain}/doe/order/${vars.event.result.slug}">here</a>,<br />
+            but it's no longer editable.</p>
+            </p>
+            <p><strong>Order details</strong>: <br />
+                ${vars.event.params.data.items?.map(item => ` • ${item.name} &times; ${item.quantity}`).join('<br />\n')}
+            </p>
+            ${signatureDoE}
+            <p>
+                <a style="text-decoration: none; color: #666; border-radius: 8px; border: 1px solid #dddddd; background: white; padding: 8px 16px; display: inline-flex;" href="${domain}/doe/order/${vars.event.result.slug}/kommissary-doe-order-${vars.event.result.id}-${vars.event.params.data.state.toLowerCase().replace(' ', '-')}.xlsx">
+                    <img style="margin-right: 6px; display: inline-block;" src="${domain}/images/file.png" alt="" height="36" width="30" /> <span style="display: inline-block; line-height: 36px;">Download Sales Order</span>
+                </a>
+            </p>
         `,
     }),
 }
