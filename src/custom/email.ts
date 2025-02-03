@@ -208,6 +208,7 @@ export function stripLineIndent(str: string): string {
 }
 
 export async function email(template: Template, email: Email, vars: Vars, ccAdmins: boolean = true) {
+    if (template == Template.UPDATE_USER && !vars.user?.fullName) return;
     const adminEmail = '"Kommissary" <it@kommissary.com>'
     const cc = ccAdmins ? { bcc: adminEmail } : {};
     email = {
