@@ -637,6 +637,7 @@ export interface ApiSiteConfigurationSiteConfiguration
     ccEmail: Schema.Attribute.Email;
     gatewayPasswords: Schema.Attribute.Text & Schema.Attribute.DefaultTo<'nyc'>;
     customOrganizations: Schema.Attribute.JSON;
+    allowedEmailPatterns: Schema.Attribute.JSON;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
