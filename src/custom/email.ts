@@ -102,7 +102,7 @@ export const EmailTemplate = {
     CREATE_ORDER: (vars: Vars) => ({
         subject: `Thank you for your order request!`,
         html: `
-            <img src="${domain}/images/Kommissary-DoE.svg" alt="Kommissary DoE" style="width: 200px; height: auto;" />
+            <img src="${domain}/images/Kommissary-DoE.png" alt="Kommissary DoE" style="width: 200px; height: auto;" />
             <p>Hi ${vars.user.fullName}, <br /> 
             we will be in-touch soon to confirm your order.</p>
             <p>View / update your order <a style="color: #f66;" href="${domain}/${vars.event.result.site}/order/${vars.event.result.slug}">here</a>.</p>
@@ -112,8 +112,8 @@ export const EmailTemplate = {
             <p style="margin-bottom: 16px;">Thanks, <br>
             The Kommissary Team</p>
             <p>
-                <a style="text-decoration: none; color: #f66; border-radius: 8px; border: 1px solid #dddddd; background: white; padding: 8px 16px; display: inline-block;" href="${domain}/${vars.event.result.site}/order/${vars.event.params.data.slug}/kommissary-doe-order-${vars.event.result.id}-${vars.event.params.data.state.toLowerCase()}.xlsx">
-                    <img style="margin-right: 6px; display: inline-block;" src="${domain}/images/file.svg" alt="" height="32" width="32" /> Download Sales Order
+                <a style="text-decoration: none; color: #666; border-radius: 8px; border: 1px solid #dddddd; background: white; padding: 8px 16px; display: inline-flex;" href="${domain}/${vars.event.result.site}/order/${vars.event.params.data.slug}/kommissary-doe-order-${vars.event.result.id}-${vars.event.params.data.state.toLowerCase()}.xlsx">
+                    <img style="margin-right: 6px; display: inline-block;" src="${domain}/images/file.png" alt="" height="36" width="30" /> <span style="display: inline-block; line-height: 36px;">Download Sales Order</span>
                 </a>
             </p>
         `,
