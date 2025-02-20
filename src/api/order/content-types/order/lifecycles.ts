@@ -4,6 +4,8 @@ const domain = process.env.NODE_ENV == 'development'
     ? process.env.FRONTEND_URL_DEV ?? "http://localhost:3000"
     : process.env.FRONTEND_URL_PROD ?? "https://kommissary.co";
 
+    console.log(domain)
+
 function generateBeforeDynamicFields(event) {
     const { data } = event.params;
     event.params.data.slug = crypto.randomUUID();

@@ -6,8 +6,8 @@ export default ({ env }) => ({
                 apiKey: env('SENDGRID_API_KEY'),
             },
             settings: {
-                defaultFrom: 'it@kommissary.com',
-                defaultReplyTo: 'it@kommissary.com',
+                defaultFrom: 'orders@kommissary.com',
+                defaultReplyTo: 'orders@kommissary.com',
             },
         },
     },

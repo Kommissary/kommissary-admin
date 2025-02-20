@@ -76,13 +76,13 @@ export const Template = {
     }
 } */
 
-const replace = (str: string, tokens: {[key: string]: string | number}) => {
+/* const replace = (str: string, tokens: {[key: string]: string | number}) => {
     return str.replace(/\{\{[^\}]{1,}\}\}/g, (_, field) => {
         const value = tokens[field];
         if (value) return value as string;
         return '';
     });
-}
+} */
 const logoDoE = `<img src="${domain}/images/Kommissary-DoE.png" alt="Kommissary DoE" style="width: 200px; height: auto;" />`;
 /* const downloadSalesOrderBtn = `<a style="text-decoration: none; color: #666; border-radius: 8px; border: 1px solid #dddddd; background: white; padding: 8px 16px; display: inline-flex;" href="${domain}/{{site}}/order/{{slug}}/kommissary-doe-order-{{id}}-{{state}}.xlsx">
     <img style="margin-right: 6px; display: inline-block;" src="${domain}/images/file.png" alt="" height="36" width="30" /> <span style="display: inline-block; line-height: 36px;">Download Sales Order</span>
@@ -116,7 +116,7 @@ export const EmailTemplate = {
         `,
     }),
     CREATE_ORDER: (vars: Vars) => ({
-        subject: `Thank you for your order request!`,
+        subject: `Thank you for your order request! #${vars.event.result.id}`,
         html: `
             ${logoDoE}
             <p>Hi ${vars.user.fullName}, <br /> 
@@ -127,14 +127,14 @@ export const EmailTemplate = {
             </p>
             ${signatureDoE}
             <p>
-                <a style="text-decoration: none; color: #666; border-radius: 8px; border: 1px solid #dddddd; background: white; padding: 8px 16px; display: inline-flex;" href="${domain}/${vars.event.result.site}/order/${vars.event.params.data.slug}/kommissary-doe-order-${vars.event.result.id}-${vars.event.params.data.state.toLowerCase()}.xlsx">
+                <a style="text-decoration: none; color: #666; border-radius: 8px; border: 1px solid #dddddd; background: white; padding: 8px 16px; display: inline-flex;" href="${domain}/${vars.event.result.site}/order/${vars.event.result.slug}/kommissary-doe-order-${vars.event.result.id}-${vars.event.params.data.state.toLowerCase()}.xlsx">
                     <img style="margin-right: 6px; display: inline-block;" src="${domain}/images/file.png" alt="" height="36" width="30" /> <span style="display: inline-block; line-height: 36px;">Download Sales Order</span>
                 </a>
             </p>
         `,
     }),
     UPDATE_ORDER: (vars: Vars) => ({
-        subject: `(${vars.event.params.data.state}) Your order has been updated`,
+        subject: `(${vars.event.params.data.state}) Your order has been updated #${vars.event.result.id}`,
         html: `
             ${logoDoE}
             <p>Hi ${vars.user.fullName}, <br />
@@ -145,14 +145,14 @@ export const EmailTemplate = {
             </p>
             ${signatureDoE}
             <p>
-                <a style="text-decoration: none; color: #666; border-radius: 8px; border: 1px solid #dddddd; background: white; padding: 8px 16px; display: inline-flex;" href="${domain}/${vars.event.result.site}/order/${vars.event.params.data.slug}/kommissary-doe-order-${vars.event.result.id}-${vars.event.params.data.state.toLowerCase().replace(' ', '-')}.xlsx">
+                <a style="text-decoration: none; color: #666; border-radius: 8px; border: 1px solid #dddddd; background: white; padding: 8px 16px; display: inline-flex;" href="${domain}/${vars.event.result.site}/order/${vars.event.result.slug}/kommissary-doe-order-${vars.event.result.id}-${vars.event.params.data.state.toLowerCase().replace(' ', '-')}.xlsx">
                     <img style="margin-right: 6px; display: inline-block;" src="${domain}/images/file.png" alt="" height="36" width="30" /> <span style="display: inline-block; line-height: 36px;">Download Sales Order</span>
                 </a>
             </p>
         `,
     }),
     UPDATE_ORDER_APPROVED: (vars: Vars) => ({
-        subject: `(${vars.event.params.data.state}) Your order is being processed!`,
+        subject: `(${vars.event.params.data.state}) Your order is being processed! #${vars.event.result.id}`,
         html: `
             ${logoDoE}
             <p>Hi ${vars.user.fullName}, <br />
@@ -171,7 +171,7 @@ export const EmailTemplate = {
         `,
     }),
     UPDATE_ORDER_ISSUED: (vars: Vars) => ({
-        subject: `(${vars.event.params.data.state}) Your order has been issued!`,
+        subject: `(${vars.event.params.data.state}) Your order has been issued! #${vars.event.result.id}`,
         html: `
             ${logoDoE}
             <p>Hi ${vars.user.fullName}, <br />
@@ -209,12 +209,17 @@ export function stripLineIndent(str: string): string {
 
 export async function email(template: Template, email: Email, vars: Vars, ccAdmins: boolean = true) {
     if (template == Template.UPDATE_USER && !vars.user?.fullName) return;
-    const adminEmail = '"Kommissary" <it@kommissary.com>'
+    const adminEmail = '"Kommissary" <it@kommissary.com>';
+    const fromEmail = '"Kommissary" <orders@kommissary.com>'; //adminEmail;
+    const replyToEmail = '"Kommissary" <orders@kommissary.com>'; //adminEmail;
     const cc = ccAdmins ? { bcc: adminEmail } : {};
+    console.log(process.env.NODE_ENV)
+    console.log(process.env.FRONTEND_URL_DEV)
+    console.log(domain)
     email = {
         ...cc,
-        from: adminEmail,
-        replyTo: adminEmail,
+        from: fromEmail,
+        replyTo: replyToEmail,
         ...emailTemplate(template, vars),
         ...email,
     } as Email;
